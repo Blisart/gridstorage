@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import {AfterViewInit, Component, ViewChild} from '@angular/core';
 import { DxDataGridComponent } from 'devextreme-angular';
 import CustomStore from 'devextreme/data/custom_store';
 import DataSource from 'devextreme/data/data_source';
@@ -10,8 +10,9 @@ import ODataStore from 'devextreme/data/odata/store';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
-  title = 'projwithbugs';
+export class AppComponent implements AfterViewInit {
+
+  @ViewChild(DxDataGridComponent, {static: false}) grid!: DxDataGridComponent;
 
   private engis: any[] =  [
     { Id: 1, Name: 'John'},
@@ -21,9 +22,7 @@ export class AppComponent {
     { Id: 19, Name: '000. Unknown'},
     { Id: 35, Name: 'Pete'},
     { Id: 36, Name: 'Patrick'},
-  ]
-
-  @ViewChild(DxDataGridComponent, {static: false}) grid!: DxDataGridComponent;
+  ];
 
   dataSource: DataSource;
   options: Options | any;
@@ -63,7 +62,7 @@ export class AppComponent {
         caption: 'Product Cost',
         dataField: 'Product_Cost',
       },
-    ]
+    ];
 
     this.options = {
       paging: { enabled: true, pageSize: 25},
@@ -73,9 +72,11 @@ export class AppComponent {
       stateStoring: { enabled: true, type: 'localStorage', storageKey: 'gridStorage' },
       activeStateEnabled: true,
       hoverStateEnabled: true,
-      showColumnLines: false,
-      showRowLines: false,
-      showBorders: false,
+      showColumnLines: true,
+      showRowLines: true,
+      showBorders: true,
+      allowColumnResizing: true,
+      columnResizingMode: 'widget',
       rowAlternationEnabled: true,
       loadPanel: { enabled: true },
       grouping: {texts: {groupContinuedMessage: null, groupContinuesMessage: null}},
@@ -97,7 +98,7 @@ export class AppComponent {
         key: 'Product_ID',
         onLoaded: (data: any) => {
           return data.map((item: any) => {
-            const engi = this.engis.find(engi => engi.Id === item.Product_Engineer_ID)
+            const engi = this.engis.find(engi => engi.Id === item.Product_Engineer_ID);
             item._product_Engineer_Name = engi ? engi.Name : null;
           })
         }
